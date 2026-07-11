@@ -1,11 +1,16 @@
-name: Build Flet APK
+name: Deploy Flet Web App
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -16,27 +21,18 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Flet and Setup
+      - name: Install Flet
         run: |
           pip install "flet[cli]"
 
-      - name: Setup Java
-        uses: actions/setup-java@v4.7.0
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2.18.0
-        with:
-          channel: 'stable'
-
-      - name: Build Android APK via Flet
+      - name: Build Flet Web Site
         run: |
-           echo "y" | flet build apk
-          
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4.6.1
+          flet build web --base-url /ChefCity/
+
+      - name: Upload Web Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: ChefCity-App
-          path: build/apk/*.apk
+          path: build/web
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
