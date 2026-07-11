@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Flet Web Site
         run: |
-          flet build web --base-url /ChefCity/
+          flet build web
 
       - name: Upload Web Artifact
         uses: actions/upload-pages-artifact@v3
