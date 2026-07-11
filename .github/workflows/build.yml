@@ -1,38 +1,8 @@
-name: Deploy Flet Web App
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+[tool.flet]
+app_title = "ChefCity"
+package_name = "com.akram.chefcity"
+build_web = true
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Python
-        uses: actions/setup-python@v5.4.0
-        with:
-          python-version: '3.11'
-
-      - name: Install Flet
-        run: |
-          pip install "flet[cli]"
-
-      - name: Build Flet Web Site
-        run: |
-          flet build web
-
-      - name: Upload Web Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/web
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+[tool.flet.app]
+path = "."
+module = "main"
