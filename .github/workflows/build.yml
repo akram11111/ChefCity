@@ -19,7 +19,6 @@ jobs:
       - name: Install Flet and Dependencies
         run: |
           pip install "flet[cli]"
-          pip install -r requirements.txt || true
 
       - name: Setup Java
         uses: actions/setup-java@v4
