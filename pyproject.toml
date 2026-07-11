@@ -1,6 +1,7 @@
 [tool.flet]
 app_title = "ChefCity"
 package_name = "com.akram.chefcity"
+build_web = true
 
 [tool.flet.app]
 path = "."
