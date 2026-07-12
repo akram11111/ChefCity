@@ -8,10 +8,9 @@ def main(page: ft.Page):
     page.rtl = True  # تفعيل الواجهة باللغة العربية بالكامل
 
     # 📞 ضع هنا رقم هاتف الواتساب الخاص بمطعمك (مع رمز الدولة وبدون أصفار أو علامة +)
-    # مثال للعراق: 9647xxxxxxxx
-    RESTAURANT_WHATSAPP = "9647813702244"
+    RESTAURANT_WHATSAPP = "9647700000000" # تأكد من وضع رقمك الحقيقي هنا
 
-    # تفعيل الخط العربي المرفوع مباشرة
+    # تفعيل الخط العربي المرفوع مباشرة (تم تصحيح المسار ليتوافق مع الويب)
     page.fonts = {"CustomArabic": "Cairo.ttf"}
     page.theme = ft.Theme(font_family="CustomArabic")
 
@@ -19,7 +18,7 @@ def main(page: ft.Page):
     cart = {}
 
     # حقول معلومات الزبون المطلوبة للتوصيل
-    
+    customer_name = ft.TextField(label="اسمك الكريم", height=45, text_size=13, hint_text="اكتب اسمك الثلاثي")
     customer_phone = ft.TextField(label="رقم الهاتف للتواصل", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
     customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / القرب من معلم بارز")
 
@@ -72,7 +71,7 @@ def main(page: ft.Page):
             if cart[name]["quantity"] <= 0: del cart[name]
         update_cart_ui()
 
-    # 📲 دالة السحر: تجميع الطلب وإرساله لواتساب المطعم تلقائياً
+    # دالة إرسال الطلب عبر الواتساب
     def send_order_to_whatsapp(e):
         if not cart:
             page.snack_bar = ft.SnackBar(ft.Text("سلة الطلبات فارغة! اختر وجباتك أولاً."), bgcolor="red600")
@@ -81,12 +80,11 @@ def main(page: ft.Page):
             return
         
         if not customer_name.value or not customer_phone.value or not customer_address.value:
-            page.snack_bar = ft.SnackBar(ft.Text("يرجى ملء جميع بيانات التوصيل (الاسم، الهاتف، العنوان)!"), bgcolor="orange800")
+            page.snack_bar = ft.SnackBar(ft.Text("يرجى ملء جميع بيانات التوصيل!"), bgcolor="orange800")
             page.snack_bar.open = True
             page.update()
             return
 
-        # 1. صياغة نص الرسالة الاحترافية الموجهة للمطعم
         message = f"📌 *طلب جديد من المنيو الإلكتروني - ChefCity* 📌\n\n"
         message += f"👤 *الزبون:* {customer_name.value}\n"
         message += f"📞 *الهاتف:* {customer_phone.value}\n"
@@ -101,10 +99,7 @@ def main(page: ft.Page):
         
         message += f"\n💰 *المجموع الإجمالي:* {total_price:,} د.ع"
         
-        # 2. ترميز النص ليتوافق مع روابط الإنترنت
         encoded_message = urllib.parse.quote(message)
-        
-        # 3. إنشاء رابط الواتساب المباشر وفتحه في متصفح الزبون
         whatsapp_url = f"https://wa.me{RESTAURANT_WHATSAPP}?text={encoded_message}"
         page.launch_url(whatsapp_url)
 
@@ -114,7 +109,9 @@ def main(page: ft.Page):
     )
 
     for item_name, item_price in products:
-        image_path = f"{item_name}.png"
+        # ✨ حل مشكلة الشاشة البيضاء: توليد مسار ويب متوافق مع استضافة GitHub Pages
+        image_path = f"assets/{item_name}.png"
+        
         menu_grid.controls.append(
             ft.Container(
                 content=ft.Card(
@@ -122,9 +119,10 @@ def main(page: ft.Page):
                     content=ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src=image_path, width=90, height=90, fit="contain"),
+                                ft.Image(src=image_path, width=80, height=60, fit="contain"),
                                 ft.Text(item_name, size=11, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER, max_lines=1),
                                 ft.Text(f"{item_price:,} د.ع", size=10, color="bluegrey700"),
+                                ft.Row([ft.Text("إضافة للسلة +", color="orange700", size=9, weight=ft.FontWeight.BOLD)], alignment=ft.MainAxisAlignment.CENTER)
                             ],
                             alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER
                         ), padding=4
@@ -143,7 +141,6 @@ def main(page: ft.Page):
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN
     )
 
-    # تصميم متجاوب ليتناسب تماماً مع هواتف الزبائن العمودية
     def build_responsive_layout():
         menu_container = ft.Container(
             content=ft.Column([ft.Text("قائمة مأكولات ومشروبات المطعم 🍽️", size=16, weight=ft.FontWeight.BOLD), menu_grid], expand=True),
@@ -181,4 +178,4 @@ def main(page: ft.Page):
     page.on_resize = on_page_resize
     page.add(build_responsive_layout())
 
-ft.app(target=main, assets_dir=".")
+ft.app(target=main)
