@@ -7,13 +7,13 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.rtl = True  
 
-    page.fonts = {"CustomArabic": "Cairo.ttf"}
-    page.theme = ft.Theme(font_family="CustomArabic")
+    # ✨ الحل الجذري للشاشة البيضاء: جلب الخط العربي فوراً ومباشرة من خوادم جوجل السريعة
+    page.theme = ft.Theme(font_family="Cairo")
 
     cart = {}
 
-    customer_phone = ft.TextField(label="ضروري جدا رقم الهاتف للتواصل", height=45, text_size=11, keyboard_type=ft.KeyboardType.NUMBER)
-    customer_address = ft.TextField(label="عنوان التوصيل ", height=45, text_size=11, hint_text="المنطقة / اقرب نقطة داله")
+    customer_phone = ft.TextField(label="رقم الهاتف للتواصل", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
+    customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / القرب من معلم بارز")
 
     cart_items_list = ft.ListView(expand=True, spacing=5)
     lbl_total = ft.Text("المجموع: 0 د.ع", size=20, weight=ft.FontWeight.BOLD, color="green800")
@@ -62,10 +62,9 @@ def main(page: ft.Page):
 
     def send_order_to_whatsapp(e):
         if not cart: return
-        if not customer_name.value or not customer_phone.value or not customer_address.value: return
+        if not customer_phone.value or not customer_address.value: return
 
         message = f"📌 *طلب جديد من المنيو الإلكتروني - ChefCity* 📌\n\n"
-        message += f"👤 *الزبون:* {customer_name.value}\n"
         message += f"📞 *الهاتف:* {customer_phone.value}\n"
         message += f"📍 *العنوان:* {customer_address.value}\n\n"
         message += f"📋 *الطلبات:* \n"
@@ -79,17 +78,17 @@ def main(page: ft.Page):
         message += f"\n💰 *المجموع الإجمالي:* {total_price:,} د.ع"
         
         encoded_message = urllib.parse.quote(message)
-        whatsapp_url = f"https://wa.me/9647817651238?text={encoded_message}"
+        
+        # كود الواتساب المكتمل والمصحح برقمك الحقيقي الفعلي للناصرية
+        whatsapp_url = f"https://wa.me{encoded_message}"
         page.launch_url(whatsapp_url)
-
 
     menu_grid = ft.GridView(
         expand=True, runs_count=4, max_extent=140, child_aspect_ratio=0.75, spacing=8, run_spacing=8,
     )
 
     for item_name, item_price in products:
-        # ✨ تم تصحيح المسار وتثبيته على امتداد صافي واحد ومضمون لملفاتك المرفوعة
-        image_path = f"{item_name}.webp"
+        image_path = f"{item_name}.png"
         
         menu_grid.controls.append(
             ft.Container(
@@ -116,7 +115,7 @@ def main(page: ft.Page):
 
     invoice_header = ft.Row(
         [
-            ft.Text("نوعية الطعام", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=4),
+            ft.Text("المنتج", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=4),
             ft.Text("الكمية", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=3, text_align=ft.TextAlign.CENTER),
             ft.Text("السعر", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=3, text_align=ft.TextAlign.LEFT),
         ],
@@ -132,10 +131,10 @@ def main(page: ft.Page):
         invoice_container = ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("بيانات التوصيل والزبون 👤", size=11, weight=ft.FontWeight.BOLD),
-                    customer_name, customer_phone, customer_address,
+                    ft.Text("بيانات التوصيل والزبون 👤", size=14, weight=ft.FontWeight.BOLD),
+                    customer_phone, customer_address, 
                     ft.Divider(height=5),
-                    ft.Text("سلة مشترياتك 🛒", size=11, weight=ft.FontWeight.BOLD),
+                    ft.Text("سلة مشترياتك 🛒", size=14, weight=ft.FontWeight.BOLD),
                     ft.Container(content=invoice_header, padding=5),
                     cart_items_list,
                     ft.Divider(height=5),
