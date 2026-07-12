@@ -3,7 +3,7 @@ from products import products  # استيراد قائمة المنتجات من
 import urllib.parse  # لترميز نصوص الرسائل بشكل صحيح للروابط
 
 def main(page: ft.Page):
-    page.title = "منيو مطعم Chef City الإلكتروني"
+    page.title = " الطلب الإلكتروني مأكولات شيف سيتي "
     page.theme_mode = ft.ThemeMode.LIGHT
     page.rtl = True  # تفعيل الواجهة باللغة العربية بالكامل
 
@@ -109,7 +109,7 @@ def main(page: ft.Page):
 
     for item_name, item_price in products:
         # ✨ حل مشكلة الشاشة البيضاء: توليد مسار ويب متوافق مع استضافة GitHub Pages
-        image_path = f"assets/{item_name}.png"
+        image_path = f"{item_name}.webp"
         
         menu_grid.controls.append(
             ft.Container(
