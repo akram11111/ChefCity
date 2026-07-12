@@ -3,7 +3,7 @@ from products import products  # استيراد قائمة المنتجات من
 import urllib.parse  # لترميز نصوص الرسائل بشكل صحيح للروابط
 
 def main(page: ft.Page):
-    page.title = "منيو مطعم ChefCity الإلكتروني"
+    page.title = "منيو مطعم Chef City الإلكتروني"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.rtl = True  # تفعيل الواجهة باللغة العربية بالكامل
 
@@ -18,7 +18,7 @@ def main(page: ft.Page):
     cart = {}
 
     # حقول معلومات الزبون المطلوبة للتوصيل
-    customer_phone = ft.TextField(label="رقم الهاتف للتواصل", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
+    customer_phone = ft.TextField(label="رقم الهاتف للتواصل معكم ", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
     customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / اقرب نقطة داله   ")
 
     # عناصر واجهة السلة الجانبية
