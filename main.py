@@ -8,7 +8,7 @@ def main(page: ft.Page):
     page.rtl = True  # تفعيل الواجهة باللغة العربية بالكامل
 
     # 📞 ضع هنا رقم هاتف الواتساب الخاص بمطعمك (مع رمز الدولة وبدون أصفار أو علامة +)
-    RESTAURANT_WHATSAPP = "9647700000000" # تأكد من وضع رقمك الحقيقي هنا
+    RESTAURANT_WHATSAPP = "9647817651238" # تأكد من وضع رقمك الحقيقي هنا
 
     # تفعيل الخط العربي المرفوع مباشرة (تم تصحيح المسار ليتوافق مع الويب)
     page.fonts = {"CustomArabic": "Cairo.ttf"}
@@ -18,9 +18,8 @@ def main(page: ft.Page):
     cart = {}
 
     # حقول معلومات الزبون المطلوبة للتوصيل
-    customer_name = ft.TextField(label="اسمك الكريم", height=45, text_size=13, hint_text="اكتب اسمك الثلاثي")
     customer_phone = ft.TextField(label="رقم الهاتف للتواصل", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
-    customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / القرب من معلم بارز")
+    customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / اقرب نقطة داله   ")
 
     # عناصر واجهة السلة الجانبية
     cart_items_list = ft.ListView(expand=True, spacing=5)
@@ -80,7 +79,7 @@ def main(page: ft.Page):
             return
         
         if not customer_name.value or not customer_phone.value or not customer_address.value:
-            page.snack_bar = ft.SnackBar(ft.Text("يرجى ملء جميع بيانات التوصيل!"), bgcolor="orange800")
+            page.snack_bar = ft.SnackBar(ft.Text("كملت طلبك .. رجاءا رقم الهاتف ضروري!"), bgcolor="orange800")
             page.snack_bar.open = True
             page.update()
             return
@@ -119,10 +118,9 @@ def main(page: ft.Page):
                     content=ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src=image_path, width=80, height=60, fit="contain"),
+                                ft.Image(src=image_path, width=90, height=90, fit="contain"),
                                 ft.Text(item_name, size=11, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER, max_lines=1),
-                                ft.Text(f"{item_price:,} د.ع", size=10, color="bluegrey700"),
-                                ft.Row([ft.Text("إضافة للسلة +", color="orange700", size=9, weight=ft.FontWeight.BOLD)], alignment=ft.MainAxisAlignment.CENTER)
+                                ft.Text(f"{item_price:,} د.ع", size=11, color="bluegrey700"),
                             ],
                             alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER
                         ), padding=4
@@ -150,7 +148,7 @@ def main(page: ft.Page):
         invoice_container = ft.Container(
             content=ft.Column(
                 [
-                    ft.Text("بيانات التوصيل والزبون 👤", size=14, weight=ft.FontWeight.BOLD),
+                    ft.Text("بيانات التوصيل والزبون 👤", size=11, weight=ft.FontWeight.BOLD),
                     customer_name, customer_phone, customer_address,
                     ft.Divider(height=5),
                     ft.Text("سلة مشترياتك 🛒", size=14, weight=ft.FontWeight.BOLD),
