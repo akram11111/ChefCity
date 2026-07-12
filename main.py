@@ -1,31 +1,23 @@
 import flet as ft
-from products import products  # استيراد قائمة المنتجات من ملفك
-import urllib.parse  # لترميز نصوص الرسائل بشكل صحيح للروابط
+from products import products  
+import urllib.parse  
 
 def main(page: ft.Page):
-    page.title = " الطلب الإلكتروني مأكولات شيف سيتي "
+    page.title = "منيو مطعم ChefCity الإلكتروني السريع"
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.rtl = True  # تفعيل الواجهة باللغة العربية بالكامل
+    page.rtl = True  
 
-    # 📞 ضع هنا رقم هاتف الواتساب الخاص بمطعمك (مع رمز الدولة وبدون أصفار أو علامة +)
-    RESTAURANT_WHATSAPP = "9647817651238" # تأكد من وضع رقمك الحقيقي هنا
-
-    # تفعيل الخط العربي المرفوع مباشرة (تم تصحيح المسار ليتوافق مع الويب)
     page.fonts = {"CustomArabic": "Cairo.ttf"}
     page.theme = ft.Theme(font_family="CustomArabic")
 
-    # سلة المشتريات (الطلبات الحالية للزبون)
     cart = {}
 
-    # حقول معلومات الزبون المطلوبة للتوصيل
-    customer_phone = ft.TextField(label="رقم الهاتف للتواصل معكم ", height=45, text_size=13, keyboard_type=ft.KeyboardType.NUMBER)
-    customer_address = ft.TextField(label="عنوان التوصيل بدقة", height=45, text_size=13, hint_text="المنطقة / اقرب نقطة داله   ")
+    customer_phone = ft.TextField(label="ضروري جدا رقم الهاتف للتواصل", height=45, text_size=11, keyboard_type=ft.KeyboardType.NUMBER)
+    customer_address = ft.TextField(label="عنوان التوصيل ", height=45, text_size=11, hint_text="المنطقة / اقرب نقطة داله")
 
-    # عناصر واجهة السلة الجانبية
     cart_items_list = ft.ListView(expand=True, spacing=5)
     lbl_total = ft.Text("المجموع: 0 د.ع", size=20, weight=ft.FontWeight.BOLD, color="green800")
 
-    # دالة لتحديث واجهة الفاتورة الحية بنظام الأعمدة المحاذية
     def update_cart_ui():
         cart_items_list.controls.clear()
         total_price = 0
@@ -45,9 +37,7 @@ def main(page: ft.Page):
                                     ft.Text(str(details["quantity"]), size=13, weight=ft.FontWeight.BOLD),
                                     ft.TextButton("+", on_click=lambda e, name=item_name: change_quantity(name, 1), width=30),
                                 ],
-                                expand=3,
-                                alignment=ft.MainAxisAlignment.CENTER,
-                                spacing=0
+                                expand=3, alignment=ft.MainAxisAlignment.CENTER, spacing=0
                             ),
                             ft.Text(f"{item_total:,} د.ع", size=12, expand=3, text_align=ft.TextAlign.LEFT, weight=ft.FontWeight.W_500),
                         ],
@@ -70,19 +60,9 @@ def main(page: ft.Page):
             if cart[name]["quantity"] <= 0: del cart[name]
         update_cart_ui()
 
-    # دالة إرسال الطلب عبر الواتساب
     def send_order_to_whatsapp(e):
-        if not cart:
-            page.snack_bar = ft.SnackBar(ft.Text("سلة الطلبات فارغة! اختر وجباتك أولاً."), bgcolor="red600")
-            page.snack_bar.open = True
-            page.update()
-            return
-        
-        if not customer_name.value or not customer_phone.value or not customer_address.value:
-            page.snack_bar = ft.SnackBar(ft.Text("كملت طلبك .. رجاءا رقم الهاتف ضروري!"), bgcolor="orange800")
-            page.snack_bar.open = True
-            page.update()
-            return
+        if not cart: return
+        if not customer_name.value or not customer_phone.value or not customer_address.value: return
 
         message = f"📌 *طلب جديد من المنيو الإلكتروني - ChefCity* 📌\n\n"
         message += f"👤 *الزبون:* {customer_name.value}\n"
@@ -99,16 +79,16 @@ def main(page: ft.Page):
         message += f"\n💰 *المجموع الإجمالي:* {total_price:,} د.ع"
         
         encoded_message = urllib.parse.quote(message)
-        whatsapp_url = f"https://wa.me{RESTAURANT_WHATSAPP}?text={encoded_message}"
+        whatsapp_url = f"https://wa.me/9647817651238?text={encoded_message}"
         page.launch_url(whatsapp_url)
 
-    # بناء شبكة المنتجات (المنيو)
+
     menu_grid = ft.GridView(
         expand=True, runs_count=4, max_extent=140, child_aspect_ratio=0.75, spacing=8, run_spacing=8,
     )
 
     for item_name, item_price in products:
-        # ✨ حل مشكلة الشاشة البيضاء: توليد مسار ويب متوافق مع استضافة GitHub Pages
+        # ✨ تم تصحيح المسار وتثبيته على امتداد صافي واحد ومضمون لملفاتك المرفوعة
         image_path = f"{item_name}.webp"
         
         menu_grid.controls.append(
@@ -118,9 +98,13 @@ def main(page: ft.Page):
                     content=ft.Container(
                         content=ft.Column(
                             [
-                                ft.Image(src=image_path, width=90, height=90, fit="contain"),
+                                ft.Image(
+                                    src=image_path, width=80, height=60, fit="contain",
+                                    gapless_playback=True 
+                                ),
                                 ft.Text(item_name, size=11, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER, max_lines=1),
-                                ft.Text(f"{item_price:,} د.ع", size=11, color="bluegrey700"),
+                                ft.Text(f"{item_price:,} د.ع", size=10, color="bluegrey700"),
+                                ft.Row([ft.Text("إضافة للسلة +", color="orange700", size=9, weight=ft.FontWeight.BOLD)], alignment=ft.MainAxisAlignment.CENTER)
                             ],
                             alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER
                         ), padding=4
@@ -132,7 +116,7 @@ def main(page: ft.Page):
 
     invoice_header = ft.Row(
         [
-            ft.Text("المنتج", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=4),
+            ft.Text("نوعية الطعام", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=4),
             ft.Text("الكمية", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=3, text_align=ft.TextAlign.CENTER),
             ft.Text("السعر", size=11, weight=ft.FontWeight.BOLD, color="bluegrey700", expand=3, text_align=ft.TextAlign.LEFT),
         ],
@@ -151,7 +135,7 @@ def main(page: ft.Page):
                     ft.Text("بيانات التوصيل والزبون 👤", size=11, weight=ft.FontWeight.BOLD),
                     customer_name, customer_phone, customer_address,
                     ft.Divider(height=5),
-                    ft.Text("سلة مشترياتك 🛒", size=14, weight=ft.FontWeight.BOLD),
+                    ft.Text("سلة مشترياتك 🛒", size=11, weight=ft.FontWeight.BOLD),
                     ft.Container(content=invoice_header, padding=5),
                     cart_items_list,
                     ft.Divider(height=5),
